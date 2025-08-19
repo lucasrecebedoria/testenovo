@@ -56,3 +56,36 @@ h1{margin:0; font-size:20px; font-weight:700; letter-spacing:.5px;}
 .modal-content{background:#121316; border:1px solid #2a2d31; border-radius:16px; padding:16px; width:min(92vw,640px);}
 .row{display:flex; gap:8px; align-items:center; margin:8px 0;}
 .hidden{display:none !important;}
+
+
+/* Badge styles */
+#userBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  margin-left: 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9em;
+  color: black;
+}
+.badge-user { background: linear-gradient(135deg, #00ff99, #00cc66); color: #fff; }
+.badge-admin { background: linear-gradient(135deg, #FFD700, #FFA500); color: #000; }
+
+/* Positive/Negative text */
+.text-positive { color: #00cc66; font-weight: bold; }
+.text-negative { color: #cc0000; font-weight: bold; }
+
+/* Styled buttons */
+button, .btn {
+  background: linear-gradient(145deg, #444, #222);
+  border: 1px solid #0f0;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+button:hover, .btn:hover {
+  background: linear-gradient(145deg, #222, #000);
+  transform: scale(1.05);
+}

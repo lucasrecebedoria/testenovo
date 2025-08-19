@@ -242,7 +242,9 @@ async function carregarResumoAdmin(){
   const saldo = rows.reduce((acc,r)=> acc + ((r.valorDinheiro||0)-(r.valorFolha||0)), 0);
   el('resumoTotalFolha').textContent = BRL.format(totalFolha);
   el('resumoSaldo').textContent = BRL.format(saldo);
-  el('resumoSituacao').textContent = saldo>=0 ? "POSITIVO" : "NEGATIVO";
+  el('resumoSituacao').textContent = saldo>=0 ? 'POSITIVO' : 'NEGATIVO';
+  el('resumoSituacao').className = saldo>=0 ? 'text-positive' : 'text-negative';
+  el('resumoSituacao').className = saldo>=0 ? 'text-positive' : 'text-negative';
 
   const tipo = el('filtroPositivosNegativos').value;
   const filtrados = rows.filter(r=>{
@@ -390,3 +392,41 @@ el('btnSalvarPos')?.addEventListener('click', async ()=>{
   el('posModal').close();
   await carregarListaPadrao();
 });
+
+
+// === Badge update ===
+function atualizarBadgeUsuario(usuario){
+  const badge = document.getElementById('userBadge');
+  if(!badge || !usuario) return;
+  const matricula = usuario.matricula || (usuario.email ? usuario.email.split('@')[0] : '');
+  const nome = usuario.nome || '';
+  const isAdmin = ['70029','6266','4144'].includes(matricula);
+  badge.textContent = nome + " (" + matricula + ")";
+  badge.className = isAdmin ? 'badge-admin' : 'badge-user';
+}
+
+
+// === Limpar filtros ===
+function limparFiltros(){
+  const f1 = document.getElementById('filtroPositivosNegativos');
+  const f2 = document.getElementById('mesResumo');
+  if(f1) f1.value = '';
+  if(f2) f2.value = '';
+  carregarResumoAdmin();
+}
+
+
+// === Injeta botão "Limpar filtros" automaticamente ===
+function injetaBotaoLimpar(){
+  const container = document.getElementById('filtrosContainer');
+  if(container && !document.getElementById('btnClearFilters')){
+    const btn = document.createElement('button');
+    btn.id = 'btnClearFilters';
+    btn.textContent = 'Limpar filtros';
+    btn.onclick = limparFiltros;
+    container.appendChild(btn);
+  }
+}
+
+// Executa após carregar DOM
+document.addEventListener('DOMContentLoaded', injetaBotaoLimpar);
