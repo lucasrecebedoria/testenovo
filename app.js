@@ -1,15 +1,3 @@
-
-// 🚀 Cache-busting automático para imagens anexadas (pós-conferência)
-function aplicarCacheBustingImagens() {
-  const ts = new Date().getTime();
-  document.querySelectorAll('.imagem-anexada').forEach(img => {
-    if (img && img.getAttribute("src")) {
-      const src = img.getAttribute("src").split("?")[0];
-      img.src = src + "?v=" + ts;
-    }
-  });
-}
-
 // Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -404,65 +392,44 @@ el('btnSalvarPos')?.addEventListener('click', async ()=>{
 });
 
 
-// Mostrar badge de usuário (nome + matrícula + cor se admin)
-async function mostrarBadgeUsuario(user) {
-  const uid = user.uid;
-  const userDoc = await getDoc(doc(db, "usuarios", uid));
-  if (userDoc.exists()) {
-    const dados = userDoc.data();
-    const nome = dados.nome || "Usuário";
-    const matricula = dados.matricula || "";
-    const admins = ["70029", "6266", "4144"];
-    const isAdmin = admins.includes(matricula);
-    const badge = document.getElementById("userBadge");
-    if(badge){
-      badge.innerHTML = `<span class="${isAdmin ? "badge-gold" : "badge-green"}">${nome} — Matrícula ${matricula}</span>`;
-    }
+/* AUTO CACHEBUST IMAGENS POS */
+(function(){
+  function bustImg(img){
+    try{
+      if(!img || !img.getAttribute) return;
+      var src = img.getAttribute('src');
+      if(!src) return;
+      var base = src.split('?')[0];
+      img.setAttribute('src', base + '?v=' + Date.now());
+    }catch(e){/*noop*/}
   }
-}
 
+  function cacheBustAnexos(){
+    document.querySelectorAll('img.imagem-anexada').forEach(bustImg);
+  }
 
-// 🔹 Ajuste automático de classes dos botões no modal
-function estilizarBotoesModal(modalEl){
-  if(!modalEl) return;
-  modalEl.querySelectorAll('button').forEach(btn=>{
-    const txt = (btn.textContent || '').toLowerCase();
-    if(txt.includes('salvar') || txt.includes('pós conferência')){
-      btn.classList.add('primary');
-    } else {
-      btn.classList.add('secondary');
-    }
-  });
-}
+  // Ao carregar a página
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', cacheBustAnexos);
+  }else{
+    cacheBustAnexos();
+  }
 
-// Observer para aplicar ao abrir popups
-const observer = new MutationObserver(mutations=>{
-  mutations.forEach(m=>{
-    if(m.addedNodes){
-      m.addedNodes.forEach(n=>{
-        if(n.nodeType===1 && n.classList.contains('modal')){
-          estilizarBotoesModal(n);
-        }
+  // Quando abrir popups / anexar imagens: observar DOM inteiro de forma leve
+  try{
+    var mo = new MutationObserver(function(mutations){
+      mutations.forEach(function(m){
+        m.addedNodes && m.addedNodes.forEach(function(n){
+          if(n && n.nodeType === 1){
+            if(n.matches && n.matches('img.imagem-anexada')){
+              bustImg(n);
+            }else if(n.querySelectorAll){
+              n.querySelectorAll('img.imagem-anexada').forEach(bustImg);
+            }
+          }
+        });
       });
-    }
-  });
-});
-observer.observe(document.body, {childList:true, subtree:true});
-
-
-// 🔹 Classificação automática também para botões principais da página
-function classifyMainButtons(){
-  document.querySelectorAll('button').forEach(btn=>{
-    const txt = (btn.textContent || '').toLowerCase();
-    if(txt.includes('salvar') || txt.includes('logout') || txt.includes('sair') || txt.includes('gerar') || txt.includes('pós conferência')){
-      btn.classList.add('primary');
-    } else {
-      btn.classList.add('secondary');
-    }
-  });
-}
-
-// Rodar após DOM carregado
-document.addEventListener('DOMContentLoaded', classifyMainButtons);
-
-window.addEventListener('load', aplicarCacheBustingImagens);
+    });
+    mo.observe(document.documentElement, {childList:true, subtree:true});
+  }catch(e){/*noop*/}
+})();
