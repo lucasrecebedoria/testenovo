@@ -1,3 +1,15 @@
+
+// 🚀 Cache-busting automático para imagens anexadas (pós-conferência)
+function aplicarCacheBustingImagens() {
+  const ts = new Date().getTime();
+  document.querySelectorAll('.imagem-anexada').forEach(img => {
+    if (img && img.getAttribute("src")) {
+      const src = img.getAttribute("src").split("?")[0];
+      img.src = src + "?v=" + ts;
+    }
+  });
+}
+
 // Firebase SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, updatePassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -452,3 +464,5 @@ function classifyMainButtons(){
 
 // Rodar após DOM carregado
 document.addEventListener('DOMContentLoaded', classifyMainButtons);
+
+window.addEventListener('load', aplicarCacheBustingImagens);

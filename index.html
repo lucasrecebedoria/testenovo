@@ -105,5 +105,24 @@
   </footer>
 
   <script type="module" src="../src/app.js"></script>
+
+<script>
+  // 🚀 Cache-busting automático por timestamp
+  const ts = new Date().getTime();
+  document.getElementById("cssLink").href = "styles.css?v=" + ts;
+  document.write('<script src="app.js?v=' + ts + '" defer><\/script>');
+</script>
+
+
+<script>
+  // Cache-busting automático para logo também
+  const tsLogo = new Date().getTime();
+  const logo = document.getElementById("logoImg");
+  if (logo) {
+    const src = logo.getAttribute("src").split("?")[0];
+    logo.src = src + "?v=" + tsLogo;
+  }
+</script>
+
 </body>
 </html>
