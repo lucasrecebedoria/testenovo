@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Login | Relatório de Diferenças</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module" src="app.js" defer></script>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js" defer></script>
 </head>
 <body class="auth-bg">
   <div class="auth-wrapper">
     <div class="auth-card">
       <div class="brand-row">
-        <img src="assets/logo.png" alt="Logo" class="auth-logo">
+        <img src="./assets/MOVE_BUSS_LOGO02.png" alt="Logo" class="auth-logo">
         <h1>Relatório de Diferenças</h1>
       </div>
       <h2>Acesso</h2>
@@ -34,47 +34,5 @@
       <button class="btn outline w-100" onclick="location.href='register.html'">Cadastrar novo usuário</button>
     </div>
   </div>
-
-<!-- Auto cache-busting (robust paths) -->
-<script>
-(function(){
-  const applyCacheBust = function(){
-    try{
-      var ts = Date.now();
-
-      // CSS (procura qualquer link que contenha "styles.css")
-      var css = document.querySelector('link[rel="stylesheet"][href*="styles.css"]');
-      if(css){
-        var baseHref = css.getAttribute('href').split('?')[0];
-        css.setAttribute('href', baseHref + '?v=' + ts);
-      }
-
-      // JS (procura qualquer script que contenha "app.js")
-      var js = document.querySelector('script[src*="app.js"]');
-      if(js){
-        var baseSrc = js.getAttribute('src').split('?')[0];
-        var neo = document.createElement('script');
-        neo.src = baseSrc + '?v=' + ts;
-        neo.defer = true;
-        js.parentNode.insertBefore(neo, js.nextSibling);
-      }
-
-      // Logo (procura img com id=logoImg OU src contendo "logo" ou "MOVE_BUSS_LOGO02")
-      var logo = document.querySelector('img#logoImg, img[src*="logo"], img[src*="MOVE_BUSS_LOGO02"]');
-      if(logo && logo.getAttribute('src')){
-        var baseLogo = logo.getAttribute('src').split('?')[0];
-        logo.setAttribute('src', baseLogo + '?v=' + ts);
-      }
-    }catch(e){ console.warn('cache-bust fail', e); }
-  };
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', applyCacheBust);
-  }else{
-    applyCacheBust();
-  }
-})();
-</script>
-
 </body>
 </html>
