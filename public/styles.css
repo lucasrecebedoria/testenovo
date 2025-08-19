@@ -86,3 +86,13 @@ h1{margin:0; font-size:20px; font-weight:700; letter-spacing:.5px;}
   font-weight: bold;
   margin-left: 10px;
 }
+
+
+/* Centralizar filtros e botão */
+#filtrosContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}

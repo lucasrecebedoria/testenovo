@@ -95,6 +95,18 @@ onAuthStateChanged(auth, async (user)=>{
   const u = udoc.data();
   const isAdmin = !!u.isAdmin;
   const matricula = u.matricula;
+  // Badge de nome + matrícula no topo
+  try {
+    const userInfoHost = document.getElementById('userInfo');
+    if (userInfoHost) {
+      userInfoHost.innerHTML = '';
+      const badge = document.createElement('span');
+      badge.className = isAdmin ? 'badge-admin' : 'badge-usuario';
+      badge.textContent = `${u.nome || user.email} — ${matricula}`;
+      userInfoHost.appendChild(badge);
+    }
+  } catch(e) { console.warn('Falha ao montar badge do usuário:', e); }
+
 
   if(isAdmin){
     adminLeft.style.display = 'block';
@@ -368,3 +380,23 @@ async function filtrarPorDia(isAdmin, userMatricula){
   const snap = await getDocs(q);
   renderRelatorios(snap, isAdmin);
 }
+
+
+// 🔄 Botão Limpar Filtros
+document.addEventListener("DOMContentLoaded", ()=>{
+  const btn = document.getElementById("limparFiltros");
+  if(btn){
+    btn.addEventListener("click", ()=>{
+      try {
+        const selMat = document.getElementById("selectMatriculas");
+        const selTipo = document.getElementById("filtroPositivosNegativos");
+        const selMes = document.getElementById("mesResumo");
+        if(selMat) selMat.value = "";
+        if(selTipo) selTipo.value = "";
+        if(selMes) selMes.value = "";
+        carregarResumoAdmin && carregarResumoAdmin(); // recarregar resumo
+        carregarRelatorios && carregarRelatorios();   // recarregar relatórios
+      } catch(e){ console.warn("Erro ao limpar filtros", e); }
+    });
+  }
+});
