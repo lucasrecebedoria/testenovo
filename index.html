@@ -35,33 +35,32 @@
     </div>
   </div>
 
-<!-- Auto cache-busting (minimal & non-invasive) -->
+<!-- Auto cache-busting (robust paths) -->
 <script>
 (function(){
   const applyCacheBust = function(){
     try{
       var ts = Date.now();
 
-      // CSS (primeiro link rel=stylesheet que aponte para styles.css)
-      var css = document.querySelector('link[rel="stylesheet"][href$="styles.css"]');
+      // CSS (procura qualquer link que contenha "styles.css")
+      var css = document.querySelector('link[rel="stylesheet"][href*="styles.css"]');
       if(css){
         var baseHref = css.getAttribute('href').split('?')[0];
         css.setAttribute('href', baseHref + '?v=' + ts);
       }
 
-      // JS: substituir o script que aponta para app.js por uma nova cópia com ?v=ts
-      var js = document.querySelector('script[src$="app.js"]');
+      // JS (procura qualquer script que contenha "app.js")
+      var js = document.querySelector('script[src*="app.js"]');
       if(js){
         var baseSrc = js.getAttribute('src').split('?')[0];
         var neo = document.createElement('script');
         neo.src = baseSrc + '?v=' + ts;
         neo.defer = true;
         js.parentNode.insertBefore(neo, js.nextSibling);
-        // opcionalmente poderíamos remover o antigo, mas manter evita piscadas
       }
 
-      // Logo (se existir)
-      var logo = document.querySelector('img#logoImg, img[src*="MOVE_BUSS_LOGO02.png"]');
+      // Logo (procura img com id=logoImg OU src contendo "logo" ou "MOVE_BUSS_LOGO02")
+      var logo = document.querySelector('img#logoImg, img[src*="logo"], img[src*="MOVE_BUSS_LOGO02"]');
       if(logo && logo.getAttribute('src')){
         var baseLogo = logo.getAttribute('src').split('?')[0];
         logo.setAttribute('src', baseLogo + '?v=' + ts);
