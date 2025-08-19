@@ -390,3 +390,65 @@ el('btnSalvarPos')?.addEventListener('click', async ()=>{
   el('posModal').close();
   await carregarListaPadrao();
 });
+
+
+// Mostrar badge de usuário (nome + matrícula + cor se admin)
+async function mostrarBadgeUsuario(user) {
+  const uid = user.uid;
+  const userDoc = await getDoc(doc(db, "usuarios", uid));
+  if (userDoc.exists()) {
+    const dados = userDoc.data();
+    const nome = dados.nome || "Usuário";
+    const matricula = dados.matricula || "";
+    const admins = ["70029", "6266", "4144"];
+    const isAdmin = admins.includes(matricula);
+    const badge = document.getElementById("userBadge");
+    if(badge){
+      badge.innerHTML = `<span class="${isAdmin ? "badge-gold" : "badge-green"}">${nome} — Matrícula ${matricula}</span>`;
+    }
+  }
+}
+
+
+// 🔹 Ajuste automático de classes dos botões no modal
+function estilizarBotoesModal(modalEl){
+  if(!modalEl) return;
+  modalEl.querySelectorAll('button').forEach(btn=>{
+    const txt = (btn.textContent || '').toLowerCase();
+    if(txt.includes('salvar') || txt.includes('pós conferência')){
+      btn.classList.add('primary');
+    } else {
+      btn.classList.add('secondary');
+    }
+  });
+}
+
+// Observer para aplicar ao abrir popups
+const observer = new MutationObserver(mutations=>{
+  mutations.forEach(m=>{
+    if(m.addedNodes){
+      m.addedNodes.forEach(n=>{
+        if(n.nodeType===1 && n.classList.contains('modal')){
+          estilizarBotoesModal(n);
+        }
+      });
+    }
+  });
+});
+observer.observe(document.body, {childList:true, subtree:true});
+
+
+// 🔹 Classificação automática também para botões principais da página
+function classifyMainButtons(){
+  document.querySelectorAll('button').forEach(btn=>{
+    const txt = (btn.textContent || '').toLowerCase();
+    if(txt.includes('salvar') || txt.includes('logout') || txt.includes('sair') || txt.includes('gerar') || txt.includes('pós conferência')){
+      btn.classList.add('primary');
+    } else {
+      btn.classList.add('secondary');
+    }
+  });
+}
+
+// Rodar após DOM carregado
+document.addEventListener('DOMContentLoaded', classifyMainButtons);

@@ -1,38 +1,109 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login | Relatório de Diferenças</title>
-  <link rel="stylesheet" href="styles.css">
-  <script type="module" src="app.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Relatório de Diferenças</title>
+  <link rel="icon" href="../assets/logo.png">
+  <link rel="stylesheet" href="./styles.css"/>
 </head>
-<body class="auth-bg">
-  <div class="auth-wrapper">
-    <div class="auth-card">
-      <div class="brand-row">
-        <img src="assets/logo.png" alt="Logo" class="auth-logo">
-        <h1>Relatório de Diferenças</h1>
+<body class="bg">
+  <header class="topbar">
+      
+    <div class="left">
+      <img src="../assets/logo.png" class="logo" alt="logo"/>
+      <h1>Relatório de Diferenças</h1>
+    </div>
+    <div class="right">
+      <button id="btnChangePassword" class="btn metal" style="display:none;">Alterar senha</button>
+      <div id="userBadge"></div>
+        <button id="btnLogout" class="btn metal danger" style="display:none;">Logout</button>
+    </div>
+  </header>
+
+  <main id="app" class="container">
+    <!-- Admin summary/filter panel (left) -->
+    <section id="adminLeft" class="panel" style="display:none;">
+      <h2>Resumo do Recebedor</h2>
+      <div class="row">
+        <label for="selectMatriculaResumo">Selecionar Matrícula</label>
+        <select id="selectMatriculaResumo"></select>
+        <button id="btnResumo" class="btn metal">Resumo do Recebedor</button>
       </div>
-      <h2>Acesso</h2>
-      <div class="form-group">
-        <label>Matrícula</label>
-        <div class="input-icon">
-          <span>🆔</span>
-          <input id="loginMatricula" placeholder="Ex: 6266">
+      <div id="resumoBox" class="card collapsible">
+        <div id="resumoHeader" class="collapse-header">Resumo (clique para abrir)</div>
+        <div id="resumoContent" class="collapse-content"></div>
+      </div>
+
+      <div class="row">
+        <label for="filtroData">Filtrar por dia (DD/MM/AAAA)</label>
+        <input id="filtroData" type="text" placeholder="Ex.: 18/08/2025" class="input">
+        <button id="btnFiltrarDia" class="btn">Filtrar</button>
+          <button id="limparFiltros" class="btn">Limpar Filtros</button>
+          <!-- class="btn metal">Filtrar dia</button>
+      </div>
+    </section>
+
+    <!-- Report creation (right, admins only) -->
+    <section id="adminRight" class="panel" style="display:none;">
+      <h2>Gerar Relatório</h2>
+      <div class="form-grid">
+        <label>Data do caixa</label>
+        <input type="date" id="dataCaixa" class="input">
+
+        <label>Valor Folha (R$)</label>
+        <input type="number" id="valorFolha" step="0.01" class="input money">
+
+        <label>Valor em Dinheiro (R$)</label>
+        <input type="number" id="valorDinheiro" step="0.01" class="input money">
+
+        <label>Matrícula do Recebedor</label>
+        <select id="selectMatriculaDestino" class="input"></select>
+      </div>
+      <button id="btnSalvarRelatorio" class="btn metal primary">Salvar</button>
+    </section>
+
+    <!-- Users only notice -->
+    <section id="userNotice" class="panel" style="display:none;">
+      <h2>Seus Relatórios</h2>
+        <span id="userInfo"></span>
+      <p>Você visualiza apenas os relatórios vinculados à sua matrícula.</p>
+    </section>
+
+    <!-- Reports list (bottom) -->
+    <section id="reportsList" class="panel wide" style="display:none;">
+      <h2>Relatórios</h2>
+        <span id="userInfo"></span>
+      <div id="listaRelatorios" class="list"></div>
+    </section>
+  </main>
+
+  <!-- Pós-conferência Modal -->
+  <div id="posModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Pós Conferência</h3>
+        <button id="posClose" class="btn metal">Fechar</button>
+      </div>
+      <div id="posAdminArea" style="display:none;">
+        <textarea id="posTexto" class="input" rows="6" placeholder="Observações do administrador"></textarea>
+        <div class="row">
+          <input type="file" id="posImagem" accept="image/*">
+          <button id="posUpload" class="btn metal">Anexar imagem</button>
         </div>
+        <button id="posSalvar" class="btn metal primary">Salvar</button>
       </div>
-      <div class="form-group">
-        <label>Senha</label>
-        <div class="input-icon">
-          <span>🔒</span>
-          <input id="loginSenha" type="password" placeholder="Sua senha">
-        </div>
+      <div class="row">
+        <button id="posVerImagem" class="btn metal">Visualizar imagem anexada</button>
+        <button id="posExcluirImagem" class="btn metal danger" style="display:none;">Excluir imagem</button>
       </div>
-      <button id="btnLogin" class="btn primary w-100">Entrar</button>
-      <div class="splitter"><span>ou</span></div>
-      <button class="btn outline w-100" onclick="location.href='register.html'">Cadastrar novo usuário</button>
     </div>
   </div>
+
+  <footer class="footer">
+    desenvolvido por Lucas L Custodio, versão 1.0
+  </footer>
+
+  <script type="module" src="../src/app.js"></script>
 </body>
 </html>
