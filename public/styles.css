@@ -96,3 +96,13 @@ h1{margin:0; font-size:20px; font-weight:700; letter-spacing:.5px;}
   gap: 10px;
   margin: 15px 0;
 }
+
+
+/* Centralizar filtro por dia + botão limpar */
+.filtro-dia-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
